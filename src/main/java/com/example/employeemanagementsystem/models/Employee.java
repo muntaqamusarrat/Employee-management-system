@@ -21,9 +21,9 @@ public class Employee {
     private String name;
 //    private String jobTitle;
 
-    @Setter
-    @Getter
-    private String departmentName;
+//    @Setter
+//    @Getter
+//    private String departmentName;
 
     @Getter
     @Setter
@@ -38,15 +38,19 @@ public class Employee {
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-
+    @Setter
+    @Getter
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
-
+    @Setter
+    @Getter
     @Transient
     private String designation;
 
+    @Setter
+    @Getter
     @ManyToMany
     @JoinTable(
             name = "employee_project",
@@ -55,6 +59,8 @@ public class Employee {
     )
     private Set<Project> projects = new HashSet<>();
 
+    @Setter
+    @Getter
     @ManyToMany
     @JoinTable(
             name = "employee_skill",

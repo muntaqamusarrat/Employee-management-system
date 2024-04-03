@@ -11,11 +11,11 @@ import java.util.Set;
 public class EmployeeDTO {
     private Long id;
     private String name;
-    private String departmentName;
     private String phone;
     private double salary;
     private Date startDate;
-    private String designation;
+    private Long departmentId;
+    private Long designationId;
     private Set<Long> projectIds;
     private Set<Long> skillIds;
 }

@@ -67,12 +67,17 @@ public class DesignationController {
         return ResponseEntity.ok().build();
     }
 
-    private DesignationDTO convertToDTO(Designation designation) {
+    public DesignationDTO convertToDTO(Designation designation) {
+        if (designation == null) {
+            return null;
+        }
+
         DesignationDTO designationDTO = new DesignationDTO();
+
         designationDTO.setId(designation.getId());
         designationDTO.setName(designation.getName());
-        designationDTO.setDepartmentId(designation.getDepartment().getId());
 
         return designationDTO;
     }
+
 }
