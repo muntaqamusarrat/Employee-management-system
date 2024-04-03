@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>List of Designations</title>
+</head>
+<body>
+<h1>List of Designations</h1>
+<table>
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Actions</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="designation : ${designations}">
+        <td th:text="${designation.id}">ID</td>
+        <td th:text="${designation.name}">Name</td>
+        <td>
+            <a th:href="@{'/designations/' + ${designation.id}}">View</a>
+            <a th:href="@{'/designations/' + ${designation.id} + '/update'}">Update</a>
+            <a th:href="@{'/designations/' + ${designation.id} + '/delete'}">Delete</a>
+        </td>
+    </tr>
+    </tbody>
+</table>
+<a href="/designations/add">Add New Designation</a>
+</body>
+</html>

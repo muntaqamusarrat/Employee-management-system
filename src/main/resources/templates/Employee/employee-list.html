@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee List</title>
+</head>
+<body>
+<h2>Employee List</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Job Title</th>
+        <th>Department</th>
+        <th>Phone</th>
+        <th>Salary</th>
+        <th>Start Date</th>
+        <th>Skills</th> <!-- Added column for skills -->
+        <th>Actions</th>
+    </tr>
+    <tr th:each="employee : ${employees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.name}"></td>
+        <td th:text="${employee.jobTitle}"></td>
+        <td th:text="${employee.department.name}"></td>
+        <td th:text="${employee.phone}"></td>
+        <td th:text="${employee.salary}"></td>
+        <td th:text="${employee.startDate}"></td>
+        <td>
+            <ul>
+                <li th:each="skill : ${employee.skills}" th:text="${skill.name}"></li>
+            </ul>
+        </td>
+        <td>
+            <a th:href="@{/employees/edit/{id}(id=${employee.id})}">Edit</a>
+            <a th:href="@{/employees/delete/{id}(id=${employee.id})}">Delete</a>
+        </td>
+    </tr>
+</table>
+<a href="/employees/new">Add New Employee</a>
+</body>
+</html>

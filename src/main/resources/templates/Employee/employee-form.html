@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Employee Form</title>
+</head>
+<body>
+<h2>Employee Form</h2>
+<form th:object="${employee}" th:action="@{/employees}" method="post">
+    <input type="hidden" th:field="*{id}"/>
+    <label>Name: <input type="text" th:field="*{name}"/></label><br/>
+    <label>Job Title: <input type="text" th:field="*{jobTitle}"/></label><br/>
+    <label>Department:</label>
+    <select th:field="*{department}">
+        <option th:each="department : ${departments}" th:value="${department.id}" th:text="${department.name}"></option>
+    </select><br/>
+    <label>Designation:</label>
+    <select th:field="*{designation}">
+        <option th:each="designation : ${employee.department.designations}" th:value="${designation.id}" th:text="${designation.name}"></option>
+    </select><br/>
+    <label>Phone: <input type="text" th:field="*{phone}"/></label><br/>
+    <label>Salary: <input type="text" th:field="*{salary}"/></label><br/>
+    <label>Start Date: <input type="text" th:field="*{startDate}"/></label><br/>
+    <label>Skills:</label>
+    <select multiple="multiple" th:field="*{skills}">
+        <option th:each="skill : ${allSkills}" th:value="${skill}" th:text="${skill.name}"></option>
+    </select>
+    <input type="submit" value="Submit"/>
+</form>
+
+</body>
+</html>

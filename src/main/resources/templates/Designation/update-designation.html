@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Designation</title>
+</head>
+<body>
+<h1>Update Designation</h1>
+<form th:action="@{'/designations/' + ${designation.id} + '/update'}" method="post">
+    <label for="name">Name:</label>
+    <input type="text" id="name" name="name" th:value="${designation.name}"/>
+    <button type="submit">Update</button>
+</form>
+<a href="/designations">Back to List</a>
+</body>
+</html>
