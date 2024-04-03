@@ -3,6 +3,7 @@ package com.example.employeemanagementsystem.dto;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
@@ -10,5 +11,5 @@ import java.util.List;
 public class ProjectDTO {
     private Long id;
     private String name;
-    private List<Long> departmentIds;
+    private List<Long> departmentIds = new ArrayList<>();
 }

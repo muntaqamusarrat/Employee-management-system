@@ -4,76 +4,65 @@ import com.example.employeemanagementsystem.dto.DepartmentDTO;
 import com.example.employeemanagementsystem.models.Department;
 import com.example.employeemanagementsystem.service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Controller
-@RequestMapping("/departments")
+@RestController
+@RequestMapping("/api/v1/departments")
 public class DepartmentController {
 
     @Autowired
     private DepartmentService departmentService;
 
     @GetMapping
-    public String getAllDepartments(Model model) {
-        List<DepartmentDTO> departmentsDTO = new ArrayList<>();
+    public ResponseEntity<List<DepartmentDTO>> getAllDepartments() {
+        List<DepartmentDTO> departmentDTOs = new ArrayList<>();
         List<Department> departments = departmentService.getAllDepartments();
         for (Department department : departments) {
-            DepartmentDTO departmentDTO = new DepartmentDTO();
-            departmentDTO.setId(department.getId());
-            departmentDTO.setName(department.getName());
-            departmentsDTO.add(departmentDTO);
+            DepartmentDTO departmentDTO = mapDepartmentToDTO(department);
+            departmentDTOs.add(departmentDTO);
         }
-        model.addAttribute("departments", departmentsDTO);
-//        return "departments";
-        return "Department/index";
+        return ResponseEntity.ok().body(departmentDTOs);
     }
 
     @GetMapping("/{id}")
-    public String getDepartmentById(@PathVariable Long id, Model model) {
+    public ResponseEntity<DepartmentDTO> getDepartmentById(@PathVariable Long id) {
         Department department = departmentService.getDepartmentById(id);
-        DepartmentDTO departmentDTO = new DepartmentDTO();
-        departmentDTO.setId(department.getId());
-        departmentDTO.setName(department.getName());
-        model.addAttribute("department", departmentDTO);
-        return "department";
+        if (department != null) {
+            DepartmentDTO departmentDTO = mapDepartmentToDTO(department);
+            return ResponseEntity.ok().body(departmentDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
-    @GetMapping("/add")
-    public String addDepartmentForm(Model model) {
-        model.addAttribute("departmentDTO", new DepartmentDTO());
-        return "Department/add-department";
-    }
-
-    @PostMapping("/add")
-    public String addDepartment(@ModelAttribute("departmentDTO") DepartmentDTO departmentDTO) {
+    @PostMapping
+    public ResponseEntity<Void> addDepartment(@RequestBody DepartmentDTO departmentDTO) {
         departmentService.addDepartment(departmentDTO);
-        return "redirect:/departments";
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{id}/update")
-    public String updateDepartmentForm(@PathVariable Long id, Model model) {
-        Department department = departmentService.getDepartmentById(id);
+    @PutMapping("/{id}")
+    public ResponseEntity<Void> updateDepartment(@PathVariable Long id, @RequestBody DepartmentDTO departmentDTO) {
+        departmentService.updateDepartment(id, departmentDTO);
+        return ResponseEntity.noContent().build();
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteDepartment(@PathVariable Long id) {
+        departmentService.deleteDepartment(id);
+        return ResponseEntity.noContent().build();
+    }
+
+    // Helper method to map Department entity to DepartmentDTO
+    private DepartmentDTO mapDepartmentToDTO(Department department) {
         DepartmentDTO departmentDTO = new DepartmentDTO();
         departmentDTO.setId(department.getId());
         departmentDTO.setName(department.getName());
-        model.addAttribute("departmentDTO", departmentDTO);
-        return "Department/update-department";
-    }
-
-    @PostMapping("/{id}/update")
-    public String updateDepartment(@PathVariable Long id, @ModelAttribute("departmentDTO") DepartmentDTO departmentDTO) {
-        departmentService.updateDepartment(id, departmentDTO);
-        return "redirect:/departments";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String deleteDepartment(@PathVariable Long id) {
-        departmentService.deleteDepartment(id);
-        return "redirect:/departments";
+        return departmentDTO;
     }
 }

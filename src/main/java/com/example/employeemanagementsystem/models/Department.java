@@ -19,12 +19,10 @@ public class Department {
     @Getter
     private String name;
 
-
     @Setter
     @Getter
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Designation> designations;
-
 
     @ManyToMany
     @JoinTable(
@@ -33,5 +31,4 @@ public class Department {
             inverseJoinColumns = @JoinColumn(name = "project_id")
     )
     private List<Project> projects;
-
 }

@@ -4,81 +4,75 @@ import com.example.employeemanagementsystem.dto.DesignationDTO;
 import com.example.employeemanagementsystem.models.Designation;
 import com.example.employeemanagementsystem.service.DesignationService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Controller
-@RequestMapping("/designations")
+@RestController
+@RequestMapping("/api/v1/designations")
 public class DesignationController {
 
     @Autowired
     private DesignationService designationService;
 
     @GetMapping
-    public String getAllDesignations(Model model) {
-        List<DesignationDTO> designationsDTO = new ArrayList<>();
+    public ResponseEntity<List<DesignationDTO>> getAllDesignations() {
         List<Designation> designations = designationService.getAllDesignations();
+        List<DesignationDTO> designationsDTO = convertToDTOList(designations); // Conversion here
+        return ResponseEntity.ok(designationsDTO);
+    }
+
+    private List<DesignationDTO> convertToDTOList(List<Designation> designations) {
+        List<DesignationDTO> designationDTOList = new ArrayList<>();
         for (Designation designation : designations) {
             DesignationDTO designationDTO = new DesignationDTO();
             designationDTO.setId(designation.getId());
             designationDTO.setName(designation.getName());
-
-            designationDTO.setDepartmentId(designation.getDepartment().getId());
-            designationsDTO.add(designationDTO);
+            // You can add additional properties if needed
+            designationDTOList.add(designationDTO);
         }
-        model.addAttribute("designations", designationsDTO);
-        return "Designation/index";
+        return designationDTOList;
     }
 
     @GetMapping("/{id}")
-    public String getDesignationById(@PathVariable Long id, Model model) {
+    public ResponseEntity<DesignationDTO> getDesignationById(@PathVariable Long id) {
         Designation designation = designationService.getDesignationById(id);
-        DesignationDTO designationDTO = new DesignationDTO();
-        designationDTO.setId(designation.getId());
-        designationDTO.setName(designation.getName());
-
-        designationDTO.setDepartmentId(designation.getDepartment().getId());
-        model.addAttribute("designation", designationDTO);
-        return "Designation/show";
-    }
-
-    @GetMapping("/add")
-    public String addDesignationForm(Model model) {
-        model.addAttribute("designationDTO", new DesignationDTO());
-        return "Designation/designation-form";
+        if (designation != null) {
+            DesignationDTO designationDTO = convertToDTO(designation); // Call convertToDTO method
+            return ResponseEntity.ok(designationDTO);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
     }
 
     @PostMapping("/add")
-    public String addDesignation(@ModelAttribute("designationDTO") DesignationDTO designationDTO) {
+    public ResponseEntity<Void> addDesignation(@RequestBody DesignationDTO designationDTO) {
         designationService.addDesignation(designationDTO);
-        return "redirect:/designations";
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @GetMapping("/{id}/update")
-    public String updateDesignationForm(@PathVariable Long id, Model model) {
-        Designation designation = designationService.getDesignationById(id);
+    @PutMapping("/{id}/update")
+    public ResponseEntity<Void> updateDesignation(@PathVariable Long id, @RequestBody DesignationDTO designationDTO) {
+        designationService.updateDesignation(id, designationDTO);
+        return ResponseEntity.ok().build();
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<Void> deleteDesignation(@PathVariable Long id) {
+        designationService.deleteDesignation(id);
+        return ResponseEntity.ok().build();
+    }
+
+    private DesignationDTO convertToDTO(Designation designation) {
         DesignationDTO designationDTO = new DesignationDTO();
         designationDTO.setId(designation.getId());
         designationDTO.setName(designation.getName());
-
         designationDTO.setDepartmentId(designation.getDepartment().getId());
-        model.addAttribute("designationDTO", designationDTO);
-        return "Designation/update-designation";
-    }
 
-    @PostMapping("/{id}/update")
-    public String updateDesignation(@PathVariable Long id, @ModelAttribute("designationDTO") DesignationDTO designationDTO) {
-        designationService.updateDesignation(id, designationDTO);
-        return "redirect:/designations";
-    }
-
-    @GetMapping("/{id}/delete")
-    public String deleteDesignation(@PathVariable Long id) {
-        designationService.deleteDesignation(id);
-        return "redirect:/designations";
+        return designationDTO;
     }
 }

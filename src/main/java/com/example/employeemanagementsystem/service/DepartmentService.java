@@ -31,11 +31,18 @@ public class DepartmentService {
     }
 
     public void addDepartment(DepartmentDTO departmentDTO) {
-        Department department = new Department();
-        department.setId(departmentDTO.getId());
-        department.setName(departmentDTO.getName());
-        departmentRepository.save(department);
+        if (departmentDTO != null) {
+            Department department = new Department();
+            department.setName(departmentDTO.getName());
+
+            departmentRepository.save(department);
+        } else {
+
+            throw new IllegalArgumentException("DepartmentDTO cannot be null");
+        }
     }
+
+
 
     public void updateDepartment(Long id, DepartmentDTO departmentDTO) {
         Optional<Department> departmentOptional = departmentRepository.findById(id);
