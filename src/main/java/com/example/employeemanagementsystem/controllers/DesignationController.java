@@ -26,12 +26,12 @@ public class DesignationController {
             DesignationDTO designationDTO = new DesignationDTO();
             designationDTO.setId(designation.getId());
             designationDTO.setName(designation.getName());
-            // Assuming departmentId is accessible from Designation entity
+
             designationDTO.setDepartmentId(designation.getDepartment().getId());
             designationsDTO.add(designationDTO);
         }
         model.addAttribute("designations", designationsDTO);
-        return "Designation/index"; // Assuming the view directory is 'designation' and file is 'index.html'
+        return "Designation/index";
     }
 
     @GetMapping("/{id}")
@@ -40,16 +40,16 @@ public class DesignationController {
         DesignationDTO designationDTO = new DesignationDTO();
         designationDTO.setId(designation.getId());
         designationDTO.setName(designation.getName());
-        // Assuming departmentId is accessible from Designation entity
+
         designationDTO.setDepartmentId(designation.getDepartment().getId());
         model.addAttribute("designation", designationDTO);
-        return "Designation/show"; // Assuming the view directory is 'designation' and file is 'show.html'
+        return "Designation/show";
     }
 
     @GetMapping("/add")
     public String addDesignationForm(Model model) {
         model.addAttribute("designationDTO", new DesignationDTO());
-        return "Designation/designation-form"; // Assuming the view directory is 'designation' and file is 'add.html'
+        return "Designation/designation-form";
     }
 
     @PostMapping("/add")
@@ -64,10 +64,10 @@ public class DesignationController {
         DesignationDTO designationDTO = new DesignationDTO();
         designationDTO.setId(designation.getId());
         designationDTO.setName(designation.getName());
-        // Assuming departmentId is accessible from Designation entity
+
         designationDTO.setDepartmentId(designation.getDepartment().getId());
         model.addAttribute("designationDTO", designationDTO);
-        return "Designation/update-designation"; // Assuming the view directory is 'designation' and file is 'update.html'
+        return "Designation/update-designation";
     }
 
     @PostMapping("/{id}/update")

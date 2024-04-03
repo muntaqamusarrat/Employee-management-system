@@ -19,13 +19,13 @@ public class Department {
     @Getter
     private String name;
 
-    // One-to-many relationship with Designation
+
     @Setter
     @Getter
     @OneToMany(mappedBy = "department", cascade = CascadeType.ALL)
     private List<Designation> designations;
 
-    // Many-to-many relationship with Project
+
     @ManyToMany
     @JoinTable(
             name = "department_project",

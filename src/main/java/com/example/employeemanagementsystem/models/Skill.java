@@ -20,7 +20,6 @@ public class Skill {
     @Setter
     private String name;
 
-    // Many-to-many relationship with Employee
     @ManyToMany(mappedBy = "skills")
     private Set<Employee> employees = new HashSet<>();
 

@@ -38,12 +38,12 @@ public class Employee {
     @Temporal(TemporalType.DATE)
     private Date startDate;
 
-    // Many-to-one relationship with Department
+
     @ManyToOne
     @JoinColumn(name = "department_id")
     private Department department;
 
-    // Transient field to access designation through department
+
     @Transient
     private String designation;
 
